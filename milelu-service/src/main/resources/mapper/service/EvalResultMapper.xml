@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.milelu.service.mapper.EvalResultMapper">
+    
+    <resultMap type="EvalResult" id="EvalResultResult">
+        <result property="id"    column="id"    />
+        <result property="categoryId"    column="category_id"    />
+        <result property="title"    column="title"    />
+        <result property="startMinute"    column="start_minute"    />
+        <result property="endMinute"    column="end_minute"    />
+        <result property="testingLevel"    column="testing_level"    />
+        <result property="description"    column="description"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectEvalResultVo">
+        select id, category_id, title, start_minute, end_minute, testing_level, description, create_time, update_time from eval_result
+    </sql>
+
+    <select id="selectEvalResultList" parameterType="EvalResult" resultMap="EvalResultResult">
+        <include refid="selectEvalResultVo"/>
+        <where>  
+            <if test="categoryId != null "> and category_id = #{categoryId}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="startMinute != null "> and start_minute = #{startMinute}</if>
+            <if test="endMinute != null "> and end_minute = #{endMinute}</if>
+            <if test="testingLevel != null  and testingLevel != ''"> and testing_level = #{testingLevel}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+        </where>
+    </select>
+    
+    <select id="selectEvalResultById" parameterType="Integer" resultMap="EvalResultResult">
+        <include refid="selectEvalResultVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertEvalResult" parameterType="EvalResult" useGeneratedKeys="true" keyProperty="id">
+        insert into eval_result
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="categoryId != null">category_id,</if>
+            <if test="title != null">title,</if>
+            <if test="startMinute != null">start_minute,</if>
+            <if test="endMinute != null">end_minute,</if>
+            <if test="testingLevel != null and testingLevel != ''">testing_level,</if>
+            <if test="description != null">description,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="categoryId != null">#{categoryId},</if>
+            <if test="title != null">#{title},</if>
+            <if test="startMinute != null">#{startMinute},</if>
+            <if test="endMinute != null">#{endMinute},</if>
+            <if test="testingLevel != null and testingLevel != ''">#{testingLevel},</if>
+            <if test="description != null">#{description},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEvalResult" parameterType="EvalResult">
+        update eval_result
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="categoryId != null">category_id = #{categoryId},</if>
+            <if test="title != null">title = #{title},</if>
+            <if test="startMinute != null">start_minute = #{startMinute},</if>
+            <if test="endMinute != null">end_minute = #{endMinute},</if>
+            <if test="testingLevel != null and testingLevel != ''">testing_level = #{testingLevel},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteEvalResultById" parameterType="Integer">
+        delete from eval_result where id = #{id}
+    </delete>
+
+    <delete id="deleteEvalResultByIds" parameterType="String">
+        delete from eval_result where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

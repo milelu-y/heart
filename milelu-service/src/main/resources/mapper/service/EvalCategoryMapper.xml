@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.milelu.service.mapper.EvalCategoryMapper">
+
+    <resultMap type="EvalCategory" id="EvalCategoryResult">
+        <result property="id"    column="id"    />
+        <result property="code"    column="code"    />
+        <result property="type"    column="type"    />
+        <result property="name"    column="name"    />
+        <result property="url"    column="url"    />
+        <result property="description"    column="description"    />
+    </resultMap>
+
+    <sql id="selectEvalCategoryVo">
+        select id, code,type ,`name`, url, description from eval_category
+    </sql>
+
+    <select id="selectEvalCategoryList" parameterType="EvalCategory" resultMap="EvalCategoryResult">
+        <include refid="selectEvalCategoryVo"/>
+        <where>
+            <if test="code != null  and code != ''"> and code = #{code}</if>
+            <if test="type != null  and type != ''"> and `type` = #{type}</if>
+            <if test="name != null  and name != ''"> and `name` like concat('%', #{name}, '%')</if>
+            <if test="url != null  and url != ''"> and url = #{url}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+        </where>
+    </select>
+
+    <select id="selectEvalCategoryById" parameterType="Integer" resultMap="EvalCategoryResult">
+        <include refid="selectEvalCategoryVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertEvalCategory" parameterType="EvalCategory" useGeneratedKeys="true" keyProperty="id">
+        insert into eval_category
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="code != null and code != ''">code,</if>
+            <if test="type != null and type != ''">`type`,</if>
+            <if test="name != null and name != ''">`name`,</if>
+            <if test="url != null">url,</if>
+            <if test="description != null">description,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="code != null and code != ''">#{code},</if>
+            <if test="type != null">#{type},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="url != null">#{url},</if>
+            <if test="description != null">#{description},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEvalCategory" parameterType="EvalCategory">
+        update eval_category
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="code != null and code != ''">code = #{code},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="url != null">url = #{url},</if>
+            <if test="description != null">description = #{description},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteEvalCategoryById" parameterType="Integer">
+        delete from eval_category where id = #{id}
+    </delete>
+
+    <delete id="deleteEvalCategoryByIds" parameterType="String">
+        delete from eval_category where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
