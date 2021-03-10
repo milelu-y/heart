@@ -23,32 +23,32 @@ public class EvalCategory extends BaseEntity {
      */
     private Integer id;
 
-    /**
-     * 编码
-     */
+    /** 编码 */
     @Excel(name = "编码")
     private String code;
-    /**
-     * 类型
-     */
+
+    /** 类型 */
     @Excel(name = "类型")
     private Integer type;
-    /**
-     * 名称
-     */
+
+    /** 名称 */
     @Excel(name = "名称")
     private String name;
 
-    /**
-     * 地址
-     */
+    /** 地址 */
     @Excel(name = "地址")
     private String url;
 
-    /**
-     * 描述
-     */
+    /** 描述 */
     @Excel(name = "描述")
     private String description;
+
+    /** 封面 */
+    @Excel(name = "封面")
+    private String cover;
+
+    /** 英文标题 */
+    @Excel(name = "英文标题")
+    private String englishTitle;
 
 }

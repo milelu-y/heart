@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.milelu.service.mapper.EvalCategoryMapper">
 
     <resultMap type="EvalCategory" id="EvalCategoryResult">
@@ -11,20 +11,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="name"    column="name"    />
         <result property="url"    column="url"    />
         <result property="description"    column="description"    />
+        <result property="cover"    column="cover"    />
+        <result property="englishTitle"    column="english_title"    />
     </resultMap>
 
     <sql id="selectEvalCategoryVo">
-        select id, code,type ,`name`, url, description from eval_category
+        select id, code, type, name, url, description, cover, english_title from eval_category
     </sql>
 
     <select id="selectEvalCategoryList" parameterType="EvalCategory" resultMap="EvalCategoryResult">
         <include refid="selectEvalCategoryVo"/>
         <where>
             <if test="code != null  and code != ''"> and code = #{code}</if>
-            <if test="type != null  and type != ''"> and `type` = #{type}</if>
-            <if test="name != null  and name != ''"> and `name` like concat('%', #{name}, '%')</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="url != null  and url != ''"> and url = #{url}</if>
             <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="cover != null  and cover != ''"> and cover = #{cover}</if>
+            <if test="englishTitle != null  and englishTitle != ''"> and english_title = #{englishTitle}</if>
         </where>
     </select>
 
@@ -37,28 +41,34 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into eval_category
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="code != null and code != ''">code,</if>
-            <if test="type != null and type != ''">`type`,</if>
-            <if test="name != null and name != ''">`name`,</if>
+            <if test="type != null">type,</if>
+            <if test="name != null and name != ''">name,</if>
             <if test="url != null">url,</if>
             <if test="description != null">description,</if>
-         </trim>
+            <if test="cover != null">cover,</if>
+            <if test="englishTitle != null">english_title,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="code != null and code != ''">#{code},</if>
             <if test="type != null">#{type},</if>
             <if test="name != null and name != ''">#{name},</if>
             <if test="url != null">#{url},</if>
             <if test="description != null">#{description},</if>
-         </trim>
+            <if test="cover != null">#{cover},</if>
+            <if test="englishTitle != null">#{englishTitle},</if>
+        </trim>
     </insert>
 
     <update id="updateEvalCategory" parameterType="EvalCategory">
         update eval_category
         <trim prefix="SET" suffixOverrides=",">
             <if test="code != null and code != ''">code = #{code},</if>
-            <if test="name != null and name != ''">name = #{name},</if>
             <if test="type != null">type = #{type},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
             <if test="url != null">url = #{url},</if>
             <if test="description != null">description = #{description},</if>
+            <if test="cover != null">cover = #{cover},</if>
+            <if test="englishTitle != null">english_title = #{englishTitle},</if>
         </trim>
         where id = #{id}
     </update>

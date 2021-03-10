@@ -79,6 +79,7 @@
       <el-table-column label="类型" :formatter="typeFormatter" align="center" prop="type"/>
       <el-table-column label="地址" align="center" prop="url"/>
       <el-table-column label="描述" align="center" prop="description"/>
+      <el-table-column label="英文标题" align="center" prop="englishTitle"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -110,7 +111,7 @@
     />
 
     <!-- 添加或修改题库分类对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="500px" @close="winClose" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="编码" prop="code">
           <el-input v-model="form.code" placeholder="请输入编码"/>
@@ -130,6 +131,11 @@
         <el-form-item label="描述" prop="description">
           <el-input v-model="form.description" type="textarea" placeholder="请输入内容"/>
         </el-form-item>
+        <el-row :gutter="24">
+          <el-col :span="12">
+            <InputPicture :form="form" :data="data" ref="picture"></InputPicture>
+          </el-col>
+        </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button plain @click="submitForm">确 定</el-button>
@@ -148,10 +154,11 @@ import {
   updateCategory,
   exportCategory
 } from "@/api/evaluate/category";
+import InputPicture from "@/components/DynamicForms/FormComponent/InputPicture";
 
 export default {
   name: "Category",
-  components: {},
+  components: {InputPicture},
   data() {
     return {
       // 遮罩层
@@ -173,6 +180,7 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      data: {fieldAliase: '封面'},
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -225,7 +233,8 @@ export default {
         name: null,
         type: null,
         url: null,
-        description: null
+        description: null,
+        cover:null
       };
       this.resetForm("form");
     },
@@ -251,27 +260,39 @@ export default {
       this.open = true;
       this.title = "添加题库分类";
     },
+    winClose(){
+      this.$refs.picture.fieldClear()
+      this.$refs.picture.handleEditChange()
+
+    },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids
       getCategory(id).then(response => {
         this.form = response.data;
-        if (this.form.type===0){
-          this.form.type='0'
-        }else if (this.form.type===1) {
-          this.form.type='1'
-        }else {
-          this.form.type='2'
+        if (this.form.type === 0) {
+          this.form.type = '0'
+        } else if (this.form.type === 1) {
+          this.form.type = '1'
+        } else {
+          this.form.type = '2'
         }
-
+        let that=this
         this.open = true;
         this.title = "修改题库分类";
+        if (this.form.cover){
+          setTimeout(function (){
+            that.$refs.picture.setFieldValue(JSON.parse(that.form.cover))
+          },100)
+
+        }
       });
     },
     /** 提交按钮 */
     submitForm() {
       this.$refs["form"].validate(valid => {
+        this.build();
         if (valid) {
           if (this.form.id != null) {
             updateCategory(this.form).then(response => {
@@ -288,6 +309,9 @@ export default {
           }
         }
       });
+    },
+    build() {
+        this.$set(this.form, 'cover', JSON.stringify(this.$refs.picture.filterField()))
     },
     /** 删除按钮操作 */
     handleDelete(row) {

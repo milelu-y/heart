@@ -89,8 +89,7 @@ export default {
           }
         })
       }
-      let vm = this
-      vm.hideUploadEdit = this.fileList.length < 1
+     this.handleEditChange();
     },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url;
@@ -173,8 +172,12 @@ export default {
       }
     },
     handleEditChange(file, fileList) {
-      let vm = this
-      vm.hideUploadEdit = fileList.length > 0
+      if (fileList){
+        this.hideUploadEdit = fileList.length > 0
+      }else {
+        this.hideUploadEdit=false
+      }
+
     },
 
   }
