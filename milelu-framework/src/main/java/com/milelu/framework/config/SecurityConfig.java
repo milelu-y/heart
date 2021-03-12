@@ -119,6 +119,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                 .antMatchers("/content/manage/searchContent").anonymous()
                 .antMatchers("/evaluate/subject/outer/**").anonymous()
                 .antMatchers("/evaluate/category/outer/**").anonymous()
+                .antMatchers("/weChat/pay/**").anonymous()
 //                .antMatchers("/channelNotify/notifyHomePage").anonymous()
 //                .antMatchers("/channelNotify/notifyWholeSite").anonymous()
 //                .antMatchers("/category/category/loadTemplate").anonymous()
