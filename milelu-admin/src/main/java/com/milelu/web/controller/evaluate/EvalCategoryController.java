@@ -104,4 +104,9 @@ public class EvalCategoryController extends BaseController {
         List<EvalCategory> list = evalCategoryService.selectEvalCategoryList(evalCategory);
         return getDataTable(list);
     }
+
+    @GetMapping(value = "/outer/{id}")
+    public AjaxResult getInfoById(@PathVariable("id") Integer id) {
+        return AjaxResult.success(evalCategoryService.selectEvalCategoryById(id));
+    }
 }

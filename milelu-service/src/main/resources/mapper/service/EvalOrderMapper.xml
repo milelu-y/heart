@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.milelu.service.mapper.EvalOrderMapper">
+
+    <resultMap type="EvalOrder" id="EvalOrderResult">
+        <result property="id" column="id"/>
+        <result property="orderNum" column="order_num"/>
+        <result property="customerId" column="customer_id"/>
+        <result property="nickname" column="nickname"/>
+        <result property="age" column="age"/>
+        <result property="sex" column="sex"/>
+        <result property="height" column="height"/>
+        <result property="minute" column="minute"/>
+        <result property="evalCategoryId" column="eval_category_id"/>
+        <result property="paymentMethod" column="payment_method"/>
+        <result property="orderMoney" column="order_money"/>
+        <result property="paymentMoney" column="payment_money"/>
+        <result property="payTime" column="pay_time"/>
+        <result property="receiveTime" column="receive_time"/>
+        <result property="orderStatus" column="order_status"/>
+        <result property="createTime" column="create_time"/>
+        <result property="modifiedTime" column="modified_time"/>
+    </resultMap>
+
+    <sql id="selectEvalOrderVo">
+        select id, order_num, customer_id, nickname, age, sex, height, minute, eval_category_id, payment_method, order_money, payment_money, pay_time, receive_time, order_status, create_time, modified_time from eval_order
+    </sql>
+
+    <select id="selectEvalOrderList" parameterType="EvalOrder" resultMap="EvalOrderResult">
+        <include refid="selectEvalOrderVo"/>
+        <where>
+            <if test="id != null ">and id = #{id}</if>
+            <if test="orderNum != null ">and order_num = #{orderNum}</if>
+            <if test="customerId != null ">and customer_id = #{customerId}</if>
+            <if test="nickname != null  and nickname != ''">and nickname like concat('%', #{nickname}, '%')</if>
+            <if test="age != null ">and age = #{age}</if>
+            <if test="sex != null ">and sex = #{sex}</if>
+            <if test="height != null ">and height = #{height}</if>
+            <if test="minute != null ">and minute = #{minute}</if>
+            <if test="evalCategoryId != null ">and eval_category_id = #{evalCategoryId}</if>
+            <if test="paymentMethod != null ">and payment_method = #{paymentMethod}</if>
+            <if test="orderMoney != null ">and order_money = #{orderMoney}</if>
+            <if test="paymentMoney != null ">and payment_money = #{paymentMoney}</if>
+            <if test="payTime != null ">and pay_time = #{payTime}</if>
+            <if test="receiveTime != null ">and receive_time = #{receiveTime}</if>
+            <if test="orderStatus != null ">and order_status = #{orderStatus}</if>
+            <if test="modifiedTime != null ">and modified_time = #{modifiedTime}</if>
+        </where>
+    </select>
+
+    <select id="selectEvalOrderById" parameterType="Integer" resultMap="EvalOrderResult">
+        <include refid="selectEvalOrderVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectEvalOrderByOrderNum" resultType="com.milelu.service.domain.EvalOrder">
+        <include refid="selectEvalOrderVo"/>
+        where order_num = #{out_trade_no}
+    </select>
+    <select id="selectEvalOrder" resultType="com.milelu.service.domain.EvalOrder">
+        select id,
+        order_num orderNum,
+        customer_id customerId,
+        nickname,
+        age,
+        sex,
+        height,
+        `minute`,
+        eval_category_id evalCategoryId,
+        payment_method paymentMethod,
+        order_money orderMoney,
+        payment_money paymentMoney,
+        pay_time payTime,
+        receive_time receiveTime,
+        order_status orderStatus,
+        create_time createTime,
+        modified_time modifiedTime
+        from eval_order
+        <where>
+            <if test="id != null ">and id = #{id}</if>
+            <if test="orderNum != null ">and order_num = #{orderNum}</if>
+            <if test="customerId != null ">and customer_id = #{customerId}</if>
+            <if test="nickname != null  and nickname != ''">and nickname like concat('%', #{nickname}, '%')</if>
+            <if test="age != null ">and age = #{age}</if>
+            <if test="sex != null ">and sex = #{sex}</if>
+            <if test="height != null ">and height = #{height}</if>
+            <if test="minute != null ">and minute = #{minute}</if>
+            <if test="evalCategoryId != null ">and eval_category_id = #{evalCategoryId}</if>
+            <if test="paymentMethod != null ">and payment_method = #{paymentMethod}</if>
+            <if test="orderMoney != null ">and order_money = #{orderMoney}</if>
+            <if test="paymentMoney != null ">and payment_money = #{paymentMoney}</if>
+            <if test="payTime != null ">and pay_time = #{payTime}</if>
+            <if test="receiveTime != null ">and receive_time = #{receiveTime}</if>
+            <if test="orderStatus != null ">and order_status = #{orderStatus}</if>
+            <if test="modifiedTime != null ">and modified_time = #{modifiedTime}</if>
+        </where>
+    </select>
+
+    <insert id="insertEvalOrder" parameterType="EvalOrder" useGeneratedKeys="true" keyProperty="id">
+        insert into eval_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="orderNum != null">order_num,</if>
+            <if test="customerId != null">customer_id,</if>
+            <if test="nickname != null and nickname != ''">nickname,</if>
+            <if test="age != null">age,</if>
+            <if test="sex != null">sex,</if>
+            <if test="height != null">height,</if>
+            <if test="minute != null">minute,</if>
+            <if test="evalCategoryId != null">eval_category_id,</if>
+            <if test="paymentMethod != null">payment_method,</if>
+            <if test="orderMoney != null">order_money,</if>
+            <if test="paymentMoney != null">payment_money,</if>
+            <if test="payTime != null">pay_time,</if>
+            <if test="receiveTime != null">receive_time,</if>
+            <if test="orderStatus != null">order_status,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="modifiedTime != null">modified_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="orderNum != null">#{orderNum},</if>
+            <if test="customerId != null">#{customerId},</if>
+            <if test="nickname != null and nickname != ''">#{nickname},</if>
+            <if test="age != null">#{age},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="height != null">#{height},</if>
+            <if test="minute != null">#{minute},</if>
+            <if test="evalCategoryId != null">#{evalCategoryId},</if>
+            <if test="paymentMethod != null">#{paymentMethod},</if>
+            <if test="orderMoney != null">#{orderMoney},</if>
+            <if test="paymentMoney != null">#{paymentMoney},</if>
+            <if test="payTime != null">#{payTime},</if>
+            <if test="receiveTime != null">#{receiveTime},</if>
+            <if test="orderStatus != null">#{orderStatus},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="modifiedTime != null">#{modifiedTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateEvalOrder" parameterType="EvalOrder">
+        update eval_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderNum != null">order_num = #{orderNum},</if>
+            <if test="customerId != null">customer_id = #{customerId},</if>
+            <if test="nickname != null and nickname != ''">nickname = #{nickname},</if>
+            <if test="age != null">age = #{age},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="height != null">height = #{height},</if>
+            <if test="minute != null">minute = #{minute},</if>
+            <if test="evalCategoryId != null">eval_category_id = #{evalCategoryId},</if>
+            <if test="paymentMethod != null">payment_method = #{paymentMethod},</if>
+            <if test="orderMoney != null">order_money = #{orderMoney},</if>
+            <if test="paymentMoney != null">payment_money = #{paymentMoney},</if>
+            <if test="payTime != null">pay_time = #{payTime},</if>
+            <if test="receiveTime != null">receive_time = #{receiveTime},</if>
+            <if test="orderStatus != null">order_status = #{orderStatus},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="modifiedTime != null">modified_time = #{modifiedTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteEvalOrderById" parameterType="Integer">
+        delete from eval_order where id = #{id}
+    </delete>
+
+    <delete id="deleteEvalOrderByIds" parameterType="String">
+        delete from eval_order where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
