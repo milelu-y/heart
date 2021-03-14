@@ -1,11 +1,8 @@
 package com.milelu.service.service.wechat.impl;
 
-import cn.hutool.core.util.XmlUtil;
 import com.milelu.common.constant.WechatConstant;
 import com.milelu.common.core.domain.AjaxResult;
 import com.milelu.common.utils.CommonUtils;
-import com.milelu.common.utils.Md5;
-import com.milelu.common.utils.sign.Md5Utils;
 import com.milelu.common.wechat.*;
 import com.milelu.service.domain.EvalOrder;
 import com.milelu.service.mapper.EvalOrderMapper;
@@ -121,6 +118,11 @@ public class WeChatServiceImpl implements WeChatService {
                 }
             }
         }
+        result = validAndUpdateOrder(result, buffer);
+        return result;
+    }
+
+    private String validAndUpdateOrder(String result, StringBuffer buffer) {
         try {
             Map<String, String> map = WXPayUtil.xmlToMap(buffer.toString());
             String mchKey = WechatConstant.MCH_KEY;
