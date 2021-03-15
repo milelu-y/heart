@@ -55,7 +55,24 @@
         where id = #{id}
     </select>
     <select id="selectEvalOrderByOrderNum" resultType="com.milelu.service.domain.EvalOrder">
-        <include refid="selectEvalOrderVo"/>
+        select id,
+               order_num orderNum,
+               customer_id customerId,
+               nickname,
+               age,
+               sex,
+               height,
+               `minute`,
+               eval_category_id evalCategoryId,
+               payment_method paymentMethod,
+               order_money orderMoney,
+               payment_money paymentMoney,
+               pay_time payTime,
+               receive_time receiveTime,
+               order_status orderStatus,
+               create_time createTime,
+               modified_time modifiedTime
+        from eval_order
         where order_num = #{out_trade_no}
     </select>
     <select id="selectEvalOrder" resultType="com.milelu.service.domain.EvalOrder">

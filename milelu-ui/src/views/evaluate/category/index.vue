@@ -78,7 +78,7 @@
       <el-table-column label="名称" align="center" prop="name"/>
       <el-table-column label="类型" :formatter="typeFormatter" align="center" prop="type"/>
       <el-table-column label="地址" align="center" prop="url"/>
-      <el-table-column label="描述" align="center" prop="description"/>
+      <el-table-column label="描述" show-overflow-tooltip align="center" prop="description"/>
       <el-table-column label="英文标题" align="center" prop="englishTitle"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">

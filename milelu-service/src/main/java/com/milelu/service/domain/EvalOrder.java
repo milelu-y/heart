@@ -56,7 +56,7 @@ public class EvalOrder extends BaseEntity {
      * 性别
      */
     @Excel(name = "性别")
-    private Integer sex;
+    private String sex;
 
     /**
      * 身高

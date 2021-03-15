@@ -2,6 +2,7 @@ package com.milelu.web.controller.evaluate;
 
 import java.util.List;
 
+import com.milelu.service.domain.TestResult;
 import com.milelu.service.service.evaluate.EvalResultService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,5 +101,10 @@ public class EvalResultController extends BaseController
     public AjaxResult remove(@PathVariable Integer[] ids)
     {
         return toAjax(evalResultService.deleteEvalResultByIds(ids));
+    }
+
+    @PostMapping("/outer/getTestResult")
+    public AjaxResult getTestResult(@RequestBody TestResult testResult){
+        return evalResultService.getTestResult(testResult);
     }
 }

@@ -73,6 +73,7 @@
 
     <el-table v-loading="loading" :data="resultList" border @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
+      <el-table-column label="题目类别" align="center" prop="categoryName"/>
       <el-table-column label="标题" show-overflow-tooltip align="center" prop="title"/>
       <el-table-column label="开始分数" align="center" prop="startMinute"/>
       <el-table-column label="结束分数" align="center" prop="endMinute"/>
@@ -109,8 +110,15 @@
     />
 
     <!-- 添加或修改得分对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="1000px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="1000px" @open="dialogOpenEvent" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+        <el-form-item label="测评分类" prop="categoryId">
+          <el-select v-model="form.categoryId" placeholder="请选择测评分类" @change="CategoryChange" clearable
+                     :style="{width: '100%'}">
+            <el-option v-for="(item, index) in evalTypes" :key="item.id" :label="item.name+':'+item.flag"
+                       :value="item.id"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="标题" prop="title">
           <el-input v-model="form.title" placeholder="请输入标题"/>
         </el-form-item>
@@ -137,6 +145,7 @@
 <script>
 import {listResult, getResult, delResult, addResult, updateResult, exportResult} from "@/api/evaluate/result";
 import TinymceEditor from '@/components/TinymceEditor'
+import {getCategory, listCategory} from "@/api/evaluate/category";
 
 export default {
   name: "Result",
@@ -155,6 +164,8 @@ export default {
       multiple: true,
       // 显示搜索条件
       showSearch: true,
+      // 测评分类
+      evalTypes: [],
       // 总条数
       total: 0,
       // 得分表格数据
@@ -194,6 +205,33 @@ export default {
     this.getList();
   },
   methods: {
+    /** 窗口打开事件*/
+    dialogOpenEvent() {
+      //加载分类
+      this.loadEvalCategory()
+    },
+    loadEvalCategory() {
+      listCategory().then(response => {
+        this.evalTypes = response.rows;
+        this.evalTypes.forEach(function (row, index) {
+          if (row.type === 0) {
+            row.flag = "文字";
+          } else if (row.type === 1) {
+            row.flag = '图片';
+          } else {
+            row.flag = '图文并茂';
+          }
+        })
+      })
+    },
+    CategoryChange(id) {
+      if (id) {
+        getCategory(id).then(response => {
+          this.category = response.data
+          this.categoryType = this.category.type
+        })
+      }
+    },
     /** 查询得分列表 */
     getList() {
       this.loading = true;

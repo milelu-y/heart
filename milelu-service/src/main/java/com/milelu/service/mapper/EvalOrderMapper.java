@@ -2,6 +2,8 @@ package com.milelu.service.mapper;
 
 import java.util.List;
 import com.milelu.service.domain.EvalOrder;
+import com.milelu.service.domain.EvalResult;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 订单主Mapper接口
@@ -62,4 +64,5 @@ public interface EvalOrderMapper
     EvalOrder selectEvalOrderByOrderNum(String out_trade_no);
 
     EvalOrder selectEvalOrder(EvalOrder evalOrder);
+
 }

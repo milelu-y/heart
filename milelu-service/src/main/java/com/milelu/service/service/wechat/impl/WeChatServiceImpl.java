@@ -86,7 +86,7 @@ public class WeChatServiceImpl implements WeChatService {
 
     @Override
     public String paySuccess(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/xml;charset=UTF-8");
+        response.setContentType("text/xml");
         String result = null;//返回给微信的处理结果
         //读取xml
         InputStream inputStream = null;
@@ -128,7 +128,7 @@ public class WeChatServiceImpl implements WeChatService {
             String mchKey = WechatConstant.MCH_KEY;
             boolean signatureValid = WXPayUtil.isSignatureValid(map, mchKey, WXPayConstants.SignType.HMACSHA256);
             if (signatureValid) {
-                System.out.println("验证通过");
+                log.info("验证通过");
                 result = setXml("SUCCESS", "OK");
             } else {
                 result = setXml("FAIL", "NO");
@@ -137,8 +137,11 @@ public class WeChatServiceImpl implements WeChatService {
                 //判断订单号是否重复
                 EvalOrder evalOrder = evalOrderService.selectEvalOrderByOrderNum(map.get("out_trade_no"));
                 if (CommonUtils.BeNotNull(evalOrder)) {
-                    evalOrder.setOrderStatus(1);
-                    evalOrderService.updateEvalOrder(evalOrder);
+                    if (evalOrder.getOrderStatus() == 0) {
+                        evalOrder.setOrderStatus(1);
+                        evalOrderService.updateEvalOrder(evalOrder);
+                    }
+
                 }
             }
         } catch (Exception e) {
@@ -162,11 +165,10 @@ public class WeChatServiceImpl implements WeChatService {
     }
 
 
-    //通过xml 发给微信消息
+    /**
+     * 通过xml 发给微信消息
+     */
     public static String setXml(String return_code, String return_msg) {
-        SortedMap<String, String> parameters = new TreeMap<String, String>();
-        parameters.put("return_code", return_code);
-        parameters.put("return_msg", return_msg);
-        return "<xml><return_code><![CDATA[" + return_code + "]]></return_code><return_msg><![CDATA[" + return_msg + "]]></return_msg></xml>";
+        return "<xml> <return_code><![CDATA[" + return_code + "]]></return_code> <return_msg><![CDATA[" + return_msg + "]]></return_msg> </xml>";
     }
 }

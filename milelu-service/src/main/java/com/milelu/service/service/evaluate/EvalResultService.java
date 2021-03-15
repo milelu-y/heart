@@ -1,7 +1,10 @@
 package com.milelu.service.service.evaluate;
 
 import java.util.List;
+
+import com.milelu.common.core.domain.AjaxResult;
 import com.milelu.service.domain.EvalResult;
+import com.milelu.service.domain.TestResult;
 
 /**
  * 得分Service接口
@@ -58,4 +61,6 @@ public interface EvalResultService
      * @return 结果
      */
     public int deleteEvalResultById(Integer id);
+
+    AjaxResult getTestResult(TestResult testResult);
 }
