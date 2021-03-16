@@ -25,6 +25,7 @@
             @deleteFile="deleteFile"
             :addTemplate="addTemplate"
             :updateMetaData="updateMetaData"
+            :generateTemplate="generateTemplate"
             @nodeClick="nodeClick"
           ></My-tree>
         </div>
@@ -74,7 +75,8 @@
     deleteTemplate,
     addSaveTemplate,
     uploadSaveTemplate,
-    templateFileUpload
+    templateFileUpload,
+    generateTemplate
   } from '@/api/file/template';
   // 编辑的主题文件
   export default {
@@ -85,7 +87,8 @@
         open: false,
         fileDrop: [
           {text: 'rm', value: '删除文件'},
-          {text: 'upMeta', value: '修改元数据'}
+          {text: 'upMeta', value: '修改元数据'},
+          {text: 'gen', value: '生成模板'}
         ],
         folderDrop: [
           {text: 'add', value: '创建模板'},
@@ -206,6 +209,12 @@
       updateMetaData(data) {
         this.id = 0;
         this.$refs.template.onOpen(data.relativePath, '修改元数据', true);
+      },
+      generateTemplate(data){
+        console.log(data)
+        generateTemplate(data).then(response=>{
+          console.log(response)
+        })
       },
       /**
        * 打开模板上传窗口

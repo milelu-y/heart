@@ -35,7 +35,7 @@ public class WeChatServiceImpl implements WeChatService {
     @Autowired
     EvalOrderMapper evalOrderMapper;
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public AjaxResult pay(EvalOrder order, String ip) {
         Map<String, String> params = new HashMap<>(16);
@@ -56,17 +56,10 @@ public class WeChatServiceImpl implements WeChatService {
         log.info("支付参数" + params);
         log.info("================分割线===============");
         final String SUCCESS_NOTIFY = "https://mana.cn.utools.club/weChat/pay/paySuccess";
-        boolean uesSandbox = false;
         try {
             MyWXPayConfig myWXPayConfig = MyWXPayConfig.getInstance();
             WXPay wxPay = new WXPay(myWXPayConfig, SUCCESS_NOTIFY, false, false);
             Map<String, String> map = wxPay.unifiedOrder(wxPay.fillRequestData(params), 15000, 15000);
-//            String mwebUrl = map.get("mweb_url");
-//            String redirectUrl = "http%3a%2f%2fmilelu.test.utools.club/testing/result.html";
-////            String redirectUrl = "mana.cn.utools.club";
-////            map.put("referer", redirectUrl);
-//            mwebUrl += String.format("&redirect_url=%s", redirectUrl);
-//            map.put("mweb_url", mwebUrl);
             map.put("orderNum", orderNum);
             return AjaxResult.success(map);
         } catch (Exception e) {
@@ -87,7 +80,8 @@ public class WeChatServiceImpl implements WeChatService {
     @Override
     public String paySuccess(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("text/xml");
-        String result = null;//返回给微信的处理结果
+        //返回给微信的处理结果
+        String result = null;
         //读取xml
         InputStream inputStream = null;
         BufferedReader bufferedReader = null;
@@ -118,8 +112,7 @@ public class WeChatServiceImpl implements WeChatService {
                 }
             }
         }
-        result = validAndUpdateOrder(result, buffer);
-        return result;
+        return validAndUpdateOrder(result, buffer);
     }
 
     private String validAndUpdateOrder(String result, StringBuffer buffer) {

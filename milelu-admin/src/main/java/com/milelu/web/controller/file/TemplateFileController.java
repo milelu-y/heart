@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +47,12 @@ public class TemplateFileController {
     @GetMapping("/getSingleTemplateMetadataByPath")
     @ResponseResult(isAjaxResult = true)
     public Metadata getSingleTemplateMetadataByPath(@NotBlank String path) {
-        return templateFileService.getSingleTemplateMetadataByPath(path);
+        try {
+            return templateFileService.getSingleTemplateMetadataByPath(path);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @GetMapping("/getTemplateTree")
@@ -154,5 +160,15 @@ public class TemplateFileController {
         String currentDir = StringUtils.substring(uploadDir, dirLastIndex);
         String pathFileName = Constants.RESOURCE_PREFIX + "/" + currentDir + "/" + fileName;
         return pathFileName;
+    }
+
+    /**
+     * 生成模板
+     */
+    @PostMapping("/generateTemplate")
+    @ResponseResult(isAjaxResult = true)
+    public void generateTemplate(@RequestBody Map<String, Object> map){
+        System.out.println(map.toString());
+        templateFileService.generateTemplate(map);
     }
 }

@@ -1,6 +1,7 @@
 package com.milelu.service.service.file.impl;
 
 import com.milelu.common.config.MileluConfig;
+import com.milelu.common.constant.Channel;
 import com.milelu.common.constant.Constants;
 import com.milelu.common.core.component.template.MetadataComponent;
 import com.milelu.common.core.domain.AjaxResult;
@@ -11,13 +12,16 @@ import com.milelu.common.exception.CustomException;
 import com.milelu.common.utils.CommonUtils;
 import com.milelu.common.utils.file.FileUtils;
 import com.milelu.freemark.component.TemplateComponent;
+import com.milelu.freemark.emums.ChannelEnum;
 import com.milelu.freemark.handler.DirectiveInterceptor;
+import com.milelu.freemark.processor.message.MessageSend;
 import com.milelu.service.service.file.TemplateFileService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -35,6 +39,8 @@ public class TemplateFileServiceImpl implements TemplateFileService {
     @Autowired
     private MetadataComponent metadataComponent;
 
+    @Autowired
+    MessageSend messageSend;
 
     @Autowired
     protected DirectiveInterceptor interceptor;
@@ -188,10 +194,9 @@ public class TemplateFileServiceImpl implements TemplateFileService {
     }
 
     @Override
-    public Metadata getSingleTemplateMetadataByPath(String path) {
+    public Metadata getSingleTemplateMetadataByPath(String path) throws FileNotFoundException {
         String filePath = MileluConfig.getWebTemplateFilePath() + File.separator + path;
-        Metadata templateMetadata = metadataComponent.getTemplateMetadata(filePath);
-        return templateMetadata;
+        return metadataComponent.getTemplateMetadata(filePath);
     }
 
     @Override
@@ -204,6 +209,26 @@ public class TemplateFileServiceImpl implements TemplateFileService {
                     metadataComponent.updateTemplateMetadata(filePath, metadata);
                     //TODO:发布静态文件
             }
+        }
+    }
+
+    @Override
+    public void generateTemplate(Map<String, Object> map) {
+        Metadata metadata = null;
+        try {
+            metadata = getSingleTemplateMetadataByPath((String) map.get("relativePath"));
+        } catch (FileNotFoundException e) {
+            throw new CustomException("系统找不到指定的文件");
+        }
+        if (CommonUtils.BeNotNull(metadata)){
+            if (CommonUtils.BeNotBlank(metadata.getPublishPath())&&!"".equals(metadata.getPublishPath())){
+                map.put("metadata",metadata);
+                messageSend.sendMessage(ChannelEnum.TEMPLATE, Channel.NOTIFY_IT, map, true);
+            }else {
+               throw  new CustomException("发布路径不能为空!");
+            }
+        }else {
+            throw  new CustomException("请填写模板元数据!");
         }
     }
 

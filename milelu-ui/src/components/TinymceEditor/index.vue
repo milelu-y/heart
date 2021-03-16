@@ -73,6 +73,9 @@ export default {
       content: ''
     };
   },
+  created() {
+    console.log("id",this.id)
+  },
   methods: {
     getContent() {
       return this.content

@@ -105,7 +105,9 @@ public class EvalResultServiceImpl implements EvalResultService {
             if (CommonUtils.BeNotNull(evalOrder) && evalOrder.getOrderStatus() == 1) {
                 //一切合法 查询测试结果
                 EvalResult result = evalResultMapper.selectTestResult(testResult.getCategoryId(), testResult.getMinute());
-                return AjaxResult.success(result);
+                AjaxResult success = AjaxResult.success(result);
+                success.put("evalOrder",evalOrder);
+                return success;
             } else {
                 return AjaxResult.error("订单不存在，或者未支付!");
             }

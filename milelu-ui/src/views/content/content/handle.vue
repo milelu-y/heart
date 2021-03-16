@@ -87,7 +87,6 @@ export default {
       }
     },
     beforeClose () {
-      console.log("12321321")
       this.$refs.modalDynamicForm.cleanForm()
     },
     handleCancel () {

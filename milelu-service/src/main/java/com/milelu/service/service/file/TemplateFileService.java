@@ -4,6 +4,9 @@ import com.milelu.common.core.domain.AjaxResult;
 import com.milelu.common.core.domain.Metadata;
 import com.milelu.common.core.domain.TreeFileInfo;
 
+import java.io.FileNotFoundException;
+import java.util.Map;
+
 /**
  * @author MILELU
  * @date 2020/12/17 10:03
@@ -49,11 +52,17 @@ public interface TemplateFileService {
      * @param path
      * @return
      */
-    Metadata getSingleTemplateMetadataByPath(String path);
+    Metadata getSingleTemplateMetadataByPath(String path) throws FileNotFoundException;
 
     /**
      * 修改模板元数据
      * @param metadata
      */
     void updateTemplateMetadata(Metadata metadata);
+
+    /**
+     * 生成模板
+     * @param map
+     */
+    void generateTemplate(Map<String, Object> map);
 }

@@ -28,7 +28,8 @@ export default {
     folderDrop: Array,
     getContent: Function,
     addTemplate: Function,
-    updateMetaData: Function
+    updateMetaData: Function,
+    generateTemplate:Function
   },
   components: {},
   data() {
@@ -70,6 +71,9 @@ export default {
     handleUpdateMetadata(data) {
       this.updateMetaData ? this.updateMetaData(data) : '';
     },
+    handleGenerate(data){
+      this.generateTemplate ? this.generateTemplate(data) : '';
+    },
     handleCommand(data, value) {
       if (value === "rm") {//删除文件or文件夹
         this.handleDeleteFile(data);
@@ -77,6 +81,8 @@ export default {
         this.handleAddTemplate(data);
       } else if (value === 'upMeta') { //修改元数据
         this.handleUpdateMetadata(data);
+      }else if (value==='gen'){
+        this.handleGenerate(data);
       }
       //其他扩展
       this.$emit("events",data,value);

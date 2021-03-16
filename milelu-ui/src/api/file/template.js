@@ -1,5 +1,14 @@
 import request from '@/utils/request'
 
+export function generateTemplate(data) {
+  return request({
+    url: '/file/template/generateTemplate',
+    method: 'post',
+    data: data
+  })
+}
+
+
 // 查询模板文件树
 export function listTemplateTree() {
   return request({

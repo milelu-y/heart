@@ -132,7 +132,7 @@
           <el-input v-model="form.testingLevel" placeholder="请输入测评级别"/>
         </el-form-item>
         <h4 style="margin-left: 12px">测评结果：</h4>
-        <tinymce-editor ref="tinymce"></tinymce-editor>
+        <tinymce-editor v-if="editor" :id="Math.ceil(Math.random() * 10000) + new Date().getTime().toString()" ref="tinymce"></tinymce-editor>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -168,6 +168,7 @@ export default {
       evalTypes: [],
       // 总条数
       total: 0,
+      editor:false,
       // 得分表格数据
       resultList: [],
       // 弹出层标题
@@ -209,6 +210,7 @@ export default {
     dialogOpenEvent() {
       //加载分类
       this.loadEvalCategory()
+      this.editor=true;
     },
     loadEvalCategory() {
       listCategory().then(response => {
@@ -244,6 +246,7 @@ export default {
     // 取消按钮
     cancel() {
       this.open = false;
+      this.editor=false;
       this.reset();
     },
     // 表单重置
@@ -298,6 +301,7 @@ export default {
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
+          this.building();
           if (this.form.id != null) {
             updateResult(this.form).then(response => {
               this.msgSuccess("修改成功");
@@ -305,7 +309,6 @@ export default {
               this.getList();
             });
           } else {
-            this.building();
             addResult(this.form).then(response => {
               this.msgSuccess("新增成功");
               this.open = false;

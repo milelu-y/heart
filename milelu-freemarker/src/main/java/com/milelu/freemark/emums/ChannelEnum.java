@@ -2,6 +2,10 @@ package com.milelu.freemark.emums;
 
 import lombok.Getter;
 
+/**
+ * @author Laity
+ */
+
 public enum ChannelEnum {
 	/**
 	 * 内容通道
